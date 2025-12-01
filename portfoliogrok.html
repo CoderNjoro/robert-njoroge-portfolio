@@ -1,0 +1,1823 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ML & Quant Trading Portfolio</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
+            color: #1a1a1a;
+            background: #fafafa;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* Header */
+        header {
+            background: white;
+            border-bottom: 1px solid #e5e5e5;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 0;
+        }
+
+        .logo {
+            font-size: 18px;
+            font-weight: 600;
+            letter-spacing: -0.5px;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            gap: 32px;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: #666;
+            font-size: 14px;
+            font-weight: 500;
+            transition: color 0.2s;
+            cursor: pointer;
+        }
+
+        nav a:hover, nav a.active {
+            color: #000;
+        }
+
+        /* Hero */
+        .hero {
+            padding: 80px 0 60px;
+        }
+
+        .hero h1 {
+            font-size: 48px;
+            line-height: 1.2;
+            margin-bottom: 20px;
+            font-weight: 600;
+            letter-spacing: -1px;
+        }
+
+        .hero .subtitle {
+            font-size: 18px;
+            color: #666;
+            margin-bottom: 20px;
+            font-weight: 400;
+            line-height: 1.5;
+        }
+
+        .hero .bio {
+            font-size: 15px;
+            color: #666;
+            margin-bottom: 40px;
+            line-height: 1.6;
+            max-width: 600px;
+        }
+
+        .cta {
+            display: inline-block;
+            padding: 12px 24px;
+            background: #000;
+            color: white;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            border-radius: 4px;
+            cursor: pointer;
+            border: none;
+            transition: background 0.2s;
+        }
+
+        .cta:hover {
+            background: #333;
+        }
+
+        /* Section */
+        section {
+            padding: 80px 0;
+            border-bottom: 1px solid #e5e5e5;
+        }
+
+        section:last-of-type {
+            border-bottom: none;
+        }
+
+        .section-title {
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 48px;
+            letter-spacing: -0.5px;
+        }
+
+        /* Projects */
+        .projects-grid {
+            display: grid;
+            gap: 64px;
+        }
+
+        .project {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 48px;
+            align-items: start;
+            /* Added cursor and transition for clickability */
+            cursor: pointer;
+            transition: background 0.2s, box-shadow 0.2s;
+            border-radius: 8px;
+            overflow: hidden;
+            background: white;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        
+        /* The entire card is clickable to open the modal */
+        .project:hover {
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            background: #fcfcfc;
+        }
+
+
+        .project:nth-child(even) {
+            direction: rtl;
+        }
+
+        .project:nth-child(even) > * {
+            direction: ltr;
+        }
+
+        .project-image {
+            aspect-ratio: 4/3;
+            background: #e5e5e5;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        .project-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .project-image.empty {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #999;
+            font-size: 14px;
+        }
+
+        .project-content h3 {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            letter-spacing: -0.5px;
+        }
+        
+        /* Removed .project-title-link to make the entire card clickable */
+
+        .project-meta {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 20px;
+            font-size: 13px;
+            color: #999;
+            font-weight: 500;
+        }
+
+        .project-status {
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        .project-status.completed {
+            color: #10b981;
+        }
+
+        .project-status.underway {
+            color: #3b82f6;
+        }
+
+        .project-description {
+            color: #666;
+            font-size: 15px;
+            line-height: 1.7;
+            margin-bottom: 20px;
+        }
+
+        .tech-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .tech-item {
+            font-size: 13px;
+            color: #999;
+            border: 1px solid #e5e5e5;
+            padding: 6px 12px;
+            border-radius: 4px;
+            background: white;
+        }
+
+        .project-links {
+            display: flex;
+            gap: 16px;
+            margin-top: 20px;
+        }
+
+        .project-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 14px;
+            color: #000;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .project-link:hover {
+            color: #666;
+        }
+
+        .project-timeline {
+            font-size: 13px;
+            color: #999;
+            margin-top: 20px;
+            margin-bottom: 16px;
+        }
+
+        .progress-container {
+            margin-bottom: 16px;
+        }
+
+        .progress-label {
+            font-size: 12px;
+            color: #999;
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .progress-bar {
+            height: 4px;
+            background: #e5e5e5;
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: #000;
+            transition: width 0.3s;
+        }
+
+        /* Skills */
+        .skills-wrapper {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 48px;
+        }
+
+        .skill-group h3 {
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #999;
+            margin-bottom: 16px;
+        }
+
+        .skill-group ul {
+            list-style: none;
+        }
+
+        .skill-group li {
+            padding: 8px 0;
+            font-size: 15px;
+            color: #444;
+        }
+
+        /* Contact */
+        .contact-section {
+            text-align: center;
+        }
+
+        .contact-intro {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 32px;
+            line-height: 1.6;
+        }
+
+        .contact-links {
+            display: flex;
+            justify-content: center;
+            gap: 32px;
+        }
+
+        .contact-links a {
+            font-size: 14px;
+            color: #1a1a1a;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .contact-links a:hover {
+            color: #666;
+        }
+
+        .footer {
+            padding: 48px 0;
+            text-align: center;
+            color: #999;
+            font-size: 13px;
+            border-top: 1px solid #e5e5e5;
+        }
+
+        /* Admin Lock Screen */
+        .admin-lock-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .admin-lock-overlay.active {
+            display: flex;
+        }
+
+        .admin-lock-box {
+            background: white;
+            padding: 40px;
+            border-radius: 8px;
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+        }
+
+        .admin-lock-box h2 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .admin-lock-box p {
+            color: #666;
+            margin-bottom: 24px;
+            font-size: 14px;
+        }
+
+        .admin-lock-form {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .admin-lock-form input {
+            padding: 12px;
+            border: 1px solid #e5e5e5;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .admin-lock-form input:focus {
+            outline: none;
+            border-color: #000;
+        }
+
+        .admin-lock-form button {
+            padding: 12px;
+            background: #000;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .admin-lock-form button:hover {
+            background: #333;
+        }
+
+        .admin-error {
+            color: #c00;
+            font-size: 12px;
+            margin-top: 8px;
+        }
+
+        /* Admin Panel */
+        .admin-panel {
+            max-width: 900px;
+            padding: 40px 0;
+        }
+
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+        }
+
+        .admin-header h2 {
+            font-size: 28px;
+            font-weight: 600;
+        }
+
+        .logout-btn {
+            padding: 8px 16px;
+            background: #e5e5e5;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background 0.2s;
+        }
+
+        .logout-btn:hover {
+            background: #d0d0d0;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 32px;
+            border-bottom: 1px solid #e5e5e5;
+            overflow-x: auto;
+        }
+
+        .tab-btn {
+            padding: 12px 16px;
+            background: none;
+            border: none;
+            font-size: 14px;
+            font-weight: 500;
+            color: #666;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+
+        .tab-btn.active {
+            color: #000;
+            border-bottom-color: #000;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            color: #666;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #e5e5e5;
+            border-radius: 4px;
+            font-size: 14px;
+            font-family: inherit;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #000;
+            box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.05);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        /* Updated for multiple images in Admin */
+        .image-preview {
+            width: 100px;
+            height: 100px;
+            border-radius: 4px;
+            margin: 4px;
+            object-fit: cover;
+            border: 1px solid #e5e5e5;
+        }
+
+        .images-preview-container {
+            display: flex;
+            flex-wrap: wrap;
+            margin-top: 8px;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 12px;
+            margin-top: 24px;
+        }
+
+        .btn-primary, .btn-secondary, .btn-danger {
+            flex: 1;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: #000;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #333;
+        }
+
+        .btn-secondary {
+            background: #f0f0f0;
+            color: #000;
+        }
+
+        .btn-secondary:hover {
+            background: #e0e0e0;
+        }
+
+        .btn-danger {
+            background: #fee;
+            color: #c00;
+        }
+
+        .btn-danger:hover {
+            background: #fdd;
+        }
+
+        .projects-list {
+            display: grid;
+            gap: 16px;
+        }
+
+        .project-item {
+            background: #f5f5f5;
+            padding: 16px;
+            border-radius: 4px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .project-item-info h4 {
+            font-size: 15px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .project-item-info p {
+            font-size: 13px;
+            color: #666;
+        }
+
+        .project-item-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn-sm {
+            padding: 6px 12px;
+            font-size: 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-sm.edit {
+            background: #e3f2fd;
+            color: #1976d2;
+        }
+
+        .btn-sm.edit:hover {
+            background: #bbdefb;
+        }
+
+        .btn-sm.delete {
+            background: #ffebee;
+            color: #d32f2f;
+        }
+
+        .btn-sm.delete:hover {
+            background: #ffcdd2;
+        }
+
+        .message {
+            padding: 12px 16px;
+            border-radius: 4px;
+            margin-bottom: 16px;
+            font-size: 14px;
+        }
+
+        .message.success {
+            background: #ecfdf5;
+            color: #065f46;
+            border: 1px solid #a7f3d0;
+        }
+
+        .message.error {
+            background: #fef2f2;
+            color: #991b1b;
+            border: 1px solid #fecaca;
+        }
+
+        /* Project Modal Styles (The new dedicated "page" view) */
+        .project-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 3000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .project-modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            max-width: 900px; /* Wider content area for details */
+            max-height: 95vh;
+            border-radius: 8px;
+            overflow: hidden;
+            position: relative;
+            width: 100%;
+        }
+
+        .modal-header {
+            padding: 20px;
+            border-bottom: 1px solid #e5e5e5;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-title {
+            font-size: 24px;
+            font-weight: 600;
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #666;
+            padding: 0 4px;
+        }
+
+        .close-modal:hover {
+            color: #000;
+        }
+
+        .modal-body {
+            padding: 20px;
+            max-height: 85vh;
+            overflow-y: auto;
+        }
+
+        .modal-description {
+            margin-bottom: 20px;
+            font-size: 16px;
+            line-height: 1.6;
+        }
+
+        .modal-meta {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 20px;
+            color: #999;
+            font-size: 14px;
+        }
+
+        .modal-tech {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        .modal-tech span {
+            padding: 4px 8px;
+            background: #f0f0f0;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+
+        .modal-progress {
+            margin-bottom: 20px;
+        }
+
+        .modal-video-container {
+            position: relative;
+            width: 100%;
+            height: 0;
+            padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+            margin-bottom: 20px;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        .modal-video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .modal-gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .modal-gallery img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: transform 0.2s;
+            border: 1px solid #e5e5e5;
+        }
+        
+        .modal-gallery img:hover {
+            transform: scale(1.03);
+            border-color: #000;
+        }
+
+        .modal-links {
+            margin-top: 20px;
+        }
+
+        .modal-links a {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 16px;
+            background: #000;
+            color: white;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            border-radius: 4px;
+            transition: background 0.2s;
+        }
+
+        .modal-links a:hover {
+            background: #333;
+        }
+
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 32px;
+            }
+
+            nav ul {
+                gap: 16px;
+            }
+
+            nav a {
+                font-size: 13px;
+            }
+
+            .project {
+                grid-template-columns: 1fr;
+                gap: 24px;
+            }
+
+            .project:nth-child(even) {
+                direction: ltr;
+            }
+
+            .skills-wrapper {
+                grid-template-columns: 1fr;
+                gap: 32px;
+            }
+
+            .contact-links {
+                gap: 16px;
+                flex-wrap: wrap;
+            }
+
+            section {
+                padding: 60px 0;
+            }
+
+            .project-links {
+                flex-wrap: wrap;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .project-item {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .project-item-actions {
+                width: 100%;
+                margin-top: 12px;
+            }
+
+            .btn-group {
+                flex-direction: column;
+            }
+
+            .admin-lock-box {
+                padding: 30px 20px;
+            }
+
+            .modal-content {
+                max-width: 95%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="portfolioView">
+        <header>
+            <div class="container">
+                <nav>
+                    <div class="logo">Robert Njoroge</div>
+                    <ul>
+                        <li><a href="#portfolio-work">Work</a></li>
+                        <li><a href="#portfolio-skills">Skills</a></li>
+                        <li><a href="#portfolio-contact">Contact</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </header>
+
+        <main>
+            <section class="hero">
+                <div class="container">
+                    <h1 id="portfolioTitle">Machine Learning Engineer</h1>
+                    <p class="subtitle" id="portfolioSubtitle">Specializing in Quantitative Finance & Algorithmic Trading</p>
+                    <p class="bio" id="portfolioBio">Focused on building intelligent systems for financial markets, developing machine learning models for algorithmic trading, and analyzing complex financial data patterns.</p>
+                    <button class="cta" onclick="document.getElementById('portfolio-work').scrollIntoView({behavior: 'smooth'})">View Projects</button>
+                </div>
+            </section>
+
+            <section id="portfolio-work">
+                <div class="container">
+                    <h2 class="section-title">Projects</h2>
+                    <div class="projects-grid" id="projectsContainer">
+                        <p style="color: #999; text-align: center;">No projects yet.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section id="portfolio-skills">
+                <div class="container">
+                    <h2 class="section-title">Skills</h2>
+                    <div class="skills-wrapper" id="skillsContainer">
+                        <div class="skill-group">
+                            <h3>ML & AI</h3>
+                            <ul>
+                                <li>TensorFlow, PyTorch</li>
+                                <li>Scikit-learn, XGBoost</li>
+                                <li>Neural Networks</li>
+                                <li>Deep Learning</li>
+                            </ul>
+                        </div>
+                        <div class="skill-group">
+                            <h3>Quantitative Finance</h3>
+                            <ul>
+                                <li>Algorithmic Trading</li>
+                                <li>Risk Analysis</li>
+                                <li>Portfolio Optimization</li>
+                                <li>Time Series Analysis</li>
+                            </ul>
+                        </div>
+                        <div class="skill-group">
+                            <h3>Data & Tools</h3>
+                            <ul>
+                                <li>Python, SQL</li>
+                                <li>Pandas, NumPy</li>
+                                <li>Jupyter, Git</li>
+                                <li>AWS, Docker</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="portfolio-contact">
+                <div class="container contact-section">
+                    <h2 class="section-title">Get In Touch</h2>
+                    <p class="contact-intro">Interested in collaborating on ML projects, quant finance, or algorithmic trading initiatives.</p>
+                    <div class="contact-links">
+                        <a href="mailto:your.email@example.com" id="emailLink">Email</a>
+                        <a href="https://github.com" target="_blank" id="githubLink">GitHub</a>
+                        <a href="https://linkedin.com" target="_blank" id="linkedinLink">LinkedIn</a>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <div class="footer">
+            <div class="container">
+                <p>&copy; 2025 ML & Quant Trading Portfolio.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="project-modal" id="projectModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title" id="modalTitle"></h2>
+                <button class="close-modal" onclick="closeProjectModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="modal-meta" id="modalMeta"></div>
+                <p class="modal-description" id="modalDescription"></p>
+                <div class="modal-progress" id="modalProgress" style="display: none;"></div>
+                <div class="modal-tech" id="modalTech"></div>
+                
+                <div class="modal-links" id="modalLinks"></div>
+
+                <div class="modal-video-container" id="modalVideoContainer" style="display: none;">
+                    <iframe id="modalVideo" src="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                </div>
+
+                <div class="modal-gallery" id="modalGallery"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="admin-lock-overlay" id="adminLock">
+        <div class="admin-lock-box">
+            <h2>Admin Access</h2>
+            <p>Enter your password to access the admin panel</p>
+            <form class="admin-lock-form" onsubmit="authenticateAdmin(event)">
+                <input type="password" id="adminPassword" placeholder="Enter password" required>
+                <button type="submit">Access Admin</button>
+                <div class="admin-error" id="adminError"></div>
+            </form>
+        </div>
+    </div>
+
+    <div id="adminView" style="display: none;">
+        <header>
+            <div class="container">
+                <nav>
+                    <div class="logo">ML & Quant Portfolio Admin</div>
+                    <ul>
+                        <li><button class="logout-btn" onclick="logoutAdmin()">← Back to Portfolio</button></li>
+                    </ul>
+                </nav>
+            </div>
+        </header>
+
+        <div class="container admin-panel">
+            <div class="admin-header">
+                <h2>Admin Panel</h2>
+            </div>
+
+            <div class="tabs">
+                <button class="tab-btn active" onclick="switchTab('profile')">Profile</button>
+                <button class="tab-btn" onclick="switchTab('projects')">Projects</button>
+                <button class="tab-btn" onclick="switchTab('skills')">Skills</button>
+                <button class="tab-btn" onclick="switchTab('settings')">Settings</button>
+            </div>
+
+            <div id="profile" class="tab-content active">
+                <div id="profileMessage"></div>
+                <form id="profileForm" onsubmit="saveProfile(event)">
+                    <div class="form-group">
+                        <label>Portfolio Title</label>
+                        <input type="text" id="titleInput" placeholder="e.g., Machine Learning Engineer" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Subtitle</label>
+                        <input type="text" id="subtitleInput" placeholder="e.g., Specializing in Quantitative Finance">
+                    </div>
+                    <div class="form-group">
+                        <label>Bio</label>
+                        <textarea id="bioInput" placeholder="Tell about yourself..." required></textarea>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Email</label>
+                            <input type="email" id="emailInput">
+                        </div>
+                        <div class="form-group">
+                            <label>GitHub Profile URL</label>
+                            <input type="url" id="githubInput">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>LinkedIn URL</label>
+                        <input type="url" id="linkedinInput">
+                    </div>
+                    <div class="btn-group">
+                        <button type="submit" class="btn-primary">Save Profile</button>
+                    </div>
+                </form>
+            </div>
+
+            <div id="projects" class="tab-content">
+                <div id="projectsMessage"></div>
+                
+                <h3 style="margin-bottom: 24px; font-size: 18px; font-weight: 600;">Add/Edit Project</h3>
+                <form id="projectForm" onsubmit="saveProject(event)">
+                    <div class="form-group">
+                        <label>Project Title</label>
+                        <input type="text" id="projectTitle" placeholder="e.g., ML Trading Bot" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Description</label>
+                        <textarea id="projectDescription" placeholder="Describe your project..." required></textarea>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Status</label>
+                            <select id="projectStatus" required>
+                                <option value="completed">Completed</option>
+                                <option value="underway">In Progress</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Year/Timeline</label>
+                            <input type="text" id="projectYear" placeholder="e.g., 2025 or 2025-2026">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>GitHub Repository URL</label>
+                        <input type="url" id="projectGithub" placeholder="https://github.com/username/repo">
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Start Date (for underway)</label>
+                            <input type="text" id="projectStart" placeholder="e.g., Nov 2025">
+                        </div>
+                        <div class="form-group">
+                            <label>End Date (for underway)</label>
+                            <input type="text" id="projectEnd" placeholder="e.g., Feb 2026">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Progress % (for underway)</label>
+                        <input type="number" id="projectProgress" min="0" max="100" placeholder="65">
+                    </div>
+                    <div class="form-group">
+                        <label>Demo Video URL (YouTube/Vimeo Embed link)</label>
+                        <input type="url" id="projectVideo" placeholder="e.g. https://www.youtube.com/embed/dQw4w9WgXcQ">
+                        <small style="color: #999;">Must be a valid embed URL (e.g., `youtube.com/embed/...`), not the regular watch link.</small>
+                    </div>
+                    <div class="form-group">
+                        <label>Project Images (multiple; leave empty to keep existing)</label>
+                        <input type="file" id="projectImages" accept="image/*" multiple>
+                        <div class="images-preview-container" id="imagesPreviewContainer"></div>
+                        <small style="color: #999;">Current images will be kept if no new files are selected. Select files to replace them.</small>
+                    </div>
+                    <div class="form-group">
+                        <label>Technologies (comma-separated)</label>
+                        <input type="text" id="projectTech" placeholder="Python, TensorFlow, Pandas, scikit-learn">
+                    </div>
+                    <div class="btn-group">
+                        <button type="submit" class="btn-primary" id="projectSubmitBtn">Add Project</button>
+                        <button type="button" class="btn-secondary" onclick="resetProjectForm()">Clear</button>
+                    </div>
+                </form>
+
+                <h3 style="margin-top: 48px; margin-bottom: 24px; font-size: 18px; font-weight: 600;">Your Projects</h3>
+                <div id="projectsList" class="projects-list">
+                    <p style="color: #999; text-align: center;">No projects yet.</p>
+                </div>
+            </div>
+
+            <div id="skills" class="tab-content">
+                <div id="skillsMessage"></div>
+                <form id="skillsForm" onsubmit="saveSkills(event)">
+                    <div class="form-group">
+                        <label>ML & AI Skills (one per line)</label>
+                        <textarea id="mlSkills" placeholder="TensorFlow&#10;PyTorch&#10;Neural Networks"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Quant Finance Skills (one per line)</label>
+                        <textarea id="quantSkills" placeholder="Algorithmic Trading&#10;Risk Analysis&#10;Portfolio Optimization"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Data & Tools Skills (one per line)</label>
+                        <textarea id="toolsSkills" placeholder="Python&#10;SQL&#10;Pandas"></textarea>
+                    </div>
+                    <div class="btn-group">
+                        <button type="submit" class="btn-primary">Save Skills</button>
+                    </div>
+                </form>
+            </div>
+
+            <div id="settings" class="tab-content">
+                <div id="settingsMessage"></div>
+                <form id="settingsForm" onsubmit="changePassword(event)">
+                    <div class="form-group">
+                        <label>Current Password</label>
+                        <input type="password" id="currentPassword" required>
+                    </div>
+                    <div class="form-group">
+                        <label>New Password</label>
+                        <input type="password" id="newPassword" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Confirm New Password</label>
+                        <input type="password" id="confirmPassword" required>
+                    </div>
+                    <div class="btn-group">
+                        <button type="submit" class="btn-primary">Change Password</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const STORAGE_KEYS = {
+            profile: 'portfolio-profile',
+            projects: 'portfolio-projects',
+            skills: 'portfolio-skills',
+            adminPassword: 'portfolio-admin-password'
+        };
+
+        const DEFAULT_PASSWORD = 'admin123';
+
+        let editingId = null;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            initializePortfolio();
+            // Enable multiple files preview
+            document.getElementById('projectImages').addEventListener('change', previewImages); 
+        });
+
+        function initializePortfolio() {
+            try {
+                loadPortfolioData();
+                initializeAdminPassword();
+            } catch (error) {
+                console.log('Initialization error:', error);
+            }
+        }
+
+        function initializeAdminPassword() {
+            try {
+                const stored = localStorage.getItem(STORAGE_KEYS.adminPassword);
+                if (!stored) {
+                    localStorage.setItem(STORAGE_KEYS.adminPassword, DEFAULT_PASSWORD);
+                }
+            } catch (error) {
+                console.log('Password initialization error:', error);
+            }
+        }
+
+        // Admin Authentication
+        function authenticateAdmin(e) {
+            e.preventDefault();
+            const password = document.getElementById('adminPassword').value;
+            
+            try {
+                const stored = localStorage.getItem(STORAGE_KEYS.adminPassword);
+                const correctPassword = stored || DEFAULT_PASSWORD;
+                
+                if (password === correctPassword) {
+                    document.getElementById('adminLock').classList.remove('active');
+                    document.getElementById('adminView').style.display = 'block';
+                    document.getElementById('portfolioView').style.display = 'none';
+                    loadAdminData();
+                } else {
+                    document.getElementById('adminError').textContent = 'Incorrect password';
+                    setTimeout(() => {
+                        document.getElementById('adminError').textContent = '';
+                    }, 3000);
+                }
+            } catch (error) {
+                document.getElementById('adminError').textContent = 'Error authenticating';
+                console.error('Auth error:', error);
+            }
+        }
+
+        function logoutAdmin() {
+            document.getElementById('adminView').style.display = 'none';
+            document.getElementById('portfolioView').style.display = 'block';
+            document.getElementById('adminPassword').value = '';
+            document.getElementById('adminError').textContent = '';
+        }
+
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        // Load Admin Data
+        function loadAdminData() {
+            try {
+                const profileData = localStorage.getItem(STORAGE_KEYS.profile);
+                const projectsData = localStorage.getItem(STORAGE_KEYS.projects);
+                const skillsData = localStorage.getItem(STORAGE_KEYS.skills);
+
+                if (profileData) {
+                    const profile = JSON.parse(profileData);
+                    updateProfileForm(profile);
+                }
+
+                if (projectsData) {
+                    const projects = JSON.parse(projectsData);
+                    displayProjectsList(projects);
+                }
+
+                if (skillsData) {
+                    const skills = JSON.parse(skillsData);
+                    updateSkillsForm(skills);
+                }
+            } catch (error) {
+                console.log('Error loading admin data:', error);
+            }
+        }
+
+        // Load Portfolio Data
+        function loadPortfolioData() {
+            try {
+                const profileData = localStorage.getItem(STORAGE_KEYS.profile);
+                const projectsData = localStorage.getItem(STORAGE_KEYS.projects);
+                const skillsData = localStorage.getItem(STORAGE_KEYS.skills);
+
+                if (profileData) {
+                    const profile = JSON.parse(profileData);
+                    updatePortfolioDisplay(profile);
+                }
+
+                if (projectsData) {
+                    const projects = JSON.parse(projectsData);
+                    displayProjects(projects);
+                }
+
+                if (skillsData) {
+                    const skills = JSON.parse(skillsData);
+                    displaySkills(skills);
+                }
+            } catch (error) {
+                console.log('No portfolio data or load error:', error);
+            }
+        }
+
+        // Profile Management
+        function saveProfile(e) {
+            e.preventDefault();
+            const profile = {
+                title: document.getElementById('titleInput').value,
+                subtitle: document.getElementById('subtitleInput').value,
+                bio: document.getElementById('bioInput').value,
+                email: document.getElementById('emailInput').value,
+                github: document.getElementById('githubInput').value,
+                linkedin: document.getElementById('linkedinInput').value
+            };
+
+            try {
+                localStorage.setItem(STORAGE_KEYS.profile, JSON.stringify(profile));
+                updatePortfolioDisplay(profile);
+                showMessage('profileMessage', 'Profile saved successfully!', 'success');
+            } catch (error) {
+                showMessage('profileMessage', 'Error saving profile (check storage quota)', 'error');
+                console.error('Save profile error:', error);
+            }
+        }
+
+        function updateProfileForm(profile) {
+            document.getElementById('titleInput').value = profile.title || '';
+            document.getElementById('subtitleInput').value = profile.subtitle || '';
+            document.getElementById('bioInput').value = profile.bio || '';
+            document.getElementById('emailInput').value = profile.email || '';
+            document.getElementById('githubInput').value = profile.github || '';
+            document.getElementById('linkedinInput').value = profile.linkedin || '';
+        }
+
+        function updatePortfolioDisplay(profile) {
+            document.getElementById('portfolioTitle').textContent = profile.title || 'Machine Learning Engineer';
+            document.getElementById('portfolioSubtitle').textContent = profile.subtitle || 'Specializing in Quantitative Finance & Algorithmic Trading';
+            document.getElementById('portfolioBio').textContent = profile.bio || 'Focused on building intelligent systems for financial markets, developing machine learning models for algorithmic trading, and analyzing complex financial data patterns.';
+            if (profile.email) document.getElementById('emailLink').href = `mailto:${profile.email}`;
+            if (profile.github) document.getElementById('githubLink').href = profile.github;
+            if (profile.linkedin) document.getElementById('linkedinLink').href = profile.linkedin;
+        }
+
+        // Project Management
+        function previewImages(e) {
+            const files = e.target.files;
+            const container = document.getElementById('imagesPreviewContainer');
+            // Clear current images in preview only if new files are selected
+            container.innerHTML = '';
+            
+            Array.from(files).forEach(file => {
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    const img = document.createElement('img');
+                    img.src = event.target.result;
+                    img.classList.add('image-preview');
+                    container.appendChild(img);
+                };
+                reader.readAsDataURL(file);
+            });
+        }
+        
+        // New function to handle editing
+        function editProject(id) {
+            const projects = getProjects();
+            const project = projects.find(p => p.id === id);
+            if (!project) return;
+
+            editingId = id;
+
+            // Populate form fields
+            document.getElementById('projectTitle').value = project.title;
+            document.getElementById('projectDescription').value = project.description;
+            document.getElementById('projectStatus').value = project.status;
+            document.getElementById('projectYear').value = project.year || '';
+            document.getElementById('projectGithub').value = project.github || '';
+            document.getElementById('projectStart').value = project.startDate || '';
+            document.getElementById('projectEnd').value = project.endDate || '';
+            document.getElementById('projectProgress').value = project.progress || '';
+            document.getElementById('projectVideo').value = project.video || '';
+            document.getElementById('projectTech').value = project.tech.join(', ');
+
+            // Populate existing images in preview
+            const container = document.getElementById('imagesPreviewContainer');
+            container.innerHTML = '';
+            if (project.images && project.images.length > 0) {
+                project.images.forEach(imgData => {
+                    const imgEl = document.createElement('img');
+                    imgEl.src = imgData;
+                    imgEl.classList.add('image-preview');
+                    container.appendChild(imgEl);
+                });
+            }
+
+            // Update button text and show cancel
+            const submitBtn = document.getElementById('projectSubmitBtn');
+            submitBtn.textContent = 'Update Project';
+            const clearBtn = document.querySelector('#projectForm .btn-secondary');
+            clearBtn.textContent = 'Cancel Edit';
+
+            // Scroll to form
+            document.getElementById('projectForm').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function saveProject(e) {
+            e.preventDefault();
+
+            const files = document.getElementById('projectImages').files;
+            const hasNewImages = files.length > 0;
+
+            const commonData = {
+                title: document.getElementById('projectTitle').value,
+                description: document.getElementById('projectDescription').value,
+                status: document.getElementById('projectStatus').value,
+                year: document.getElementById('projectYear').value,
+                github: document.getElementById('projectGithub').value,
+                startDate: document.getElementById('projectStart').value,
+                endDate: document.getElementById('projectEnd').value,
+                progress: parseInt(document.getElementById('projectProgress').value) || 0,
+                video: document.getElementById('projectVideo').value || '',
+                tech: document.getElementById('projectTech').value.split(',').map(t => t.trim()).filter(t => t)
+            };
+
+            let projects = getProjects();
+
+            if (editingId) {
+                // Update existing project
+                const index = projects.findIndex(p => p.id === editingId);
+                if (index === -1) {
+                    // Should not happen, but a safeguard
+                    editingId = null;
+                    return saveProject(e);
+                }
+
+                if (hasNewImages) {
+                    // Convert new images to base64
+                    const promises = Array.from(files).map(file => {
+                        return new Promise((resolve) => {
+                            const reader = new FileReader();
+                            reader.onload = (event) => resolve(event.target.result);
+                            reader.readAsDataURL(file);
+                        });
+                    });
+
+                    Promise.all(promises).then(newImagesData => {
+                        projects[index] = { ...projects[index], ...commonData, images: newImagesData };
+                        localStorage.setItem(STORAGE_KEYS.projects, JSON.stringify(projects));
+                        refreshAfterSave(projects);
+                    });
+                } else {
+                    // Keep existing images array
+                    projects[index] = { ...projects[index], ...commonData };
+                    localStorage.setItem(STORAGE_KEYS.projects, JSON.stringify(projects));
+                    refreshAfterSave(projects);
+                }
+            } else {
+                // Add new project
+                // Convert new images to base64
+                const promises = Array.from(files).map(file => {
+                    return new Promise((resolve) => {
+                        const reader = new FileReader();
+                        reader.onload = (event) => resolve(event.target.result);
+                        reader.readAsDataURL(file);
+                    });
+                });
+
+                Promise.all(promises).then(imagesData => {
+                    const project = {
+                        id: Date.now(),
+                        ...commonData,
+                        images: imagesData
+                    };
+                    projects.push(project);
+                    localStorage.setItem(STORAGE_KEYS.projects, JSON.stringify(projects));
+                    refreshAfterSave(projects);
+                });
+            }
+
+            function refreshAfterSave(updatedProjects) {
+                displayProjects(updatedProjects);
+                displayProjectsList(updatedProjects);
+                resetProjectForm();
+                showMessage('projectsMessage', editingId ? 'Project updated successfully!' : 'Project added successfully!', 'success');
+                loadPortfolioData();
+            }
+        }
+
+        function deleteProject(id) {
+            if (!confirm('Are you sure you want to delete this project?')) return;
+            
+            let projects = getProjects();
+            projects = projects.filter(p => p.id !== id);
+
+            try {
+                localStorage.setItem(STORAGE_KEYS.projects, JSON.stringify(projects));
+                displayProjects(projects);
+                displayProjectsList(projects);
+                showMessage('projectsMessage', 'Project deleted successfully!', 'success');
+                loadPortfolioData();
+            } catch (error) {
+                showMessage('projectsMessage', 'Error deleting project', 'error');
+                console.error('Delete project error:', error);
+            }
+        }
+
+        function getProjects() {
+            try {
+                const data = localStorage.getItem(STORAGE_KEYS.projects);
+                return data ? JSON.parse(data) : [];
+            } catch {
+                return [];
+            }
+        }
+
+        function displayProjects(projects) {
+            const container = document.getElementById('projectsContainer');
+            
+            if (projects.length === 0) {
+                container.innerHTML = '<p style="color: #999; text-align: center;">No projects yet. Add your first project from the admin panel.</p>';
+                return;
+            }
+
+            container.innerHTML = projects.map((project) => {
+                const firstImage = project.images && project.images.length > 0 ? project.images[0] : null;
+                return `
+                    <article class="project" onclick="openProjectModal(${project.id})">
+                        <div class="project-image ${!firstImage ? 'empty' : ''}">
+                            ${firstImage ? `<img src="${firstImage}" alt="${project.title}">` : 'No image'}
+                        </div>
+                        <div class="project-content">
+                            <h3>${project.title}</h3>
+                            <div class="project-meta">
+                                <span class="project-status ${project.status}">${project.status === 'completed' ? '✓ Completed' : '⟳ In Progress'}</span>
+                                <span>${project.year || '2025'}</span>
+                            </div>
+                            <p class="project-description">${project.description.substring(0, 100)}...</p>
+                            ${project.status === 'underway' ? `
+                                <div class="progress-container">
+                                    <div class="progress-label">
+                                        <span>Progress</span>
+                                        <span>${project.progress}%</span>
+                                    </div>
+                                    <div class="progress-bar">
+                                        <div class="progress-fill" style="width: ${project.progress}%"></div>
+                                    </div>
+                                </div>
+                            ` : ''}
+                            <div class="tech-list">
+                                ${project.tech.slice(0, 3).map(t => `<span class="tech-item">${t}</span>`).join('')}
+                            </div>
+                            ${project.github ? `
+                                <div class="project-links">
+                                    <a href="${project.github}" target="_blank" class="project-link" onclick="event.stopPropagation()">
+                                        → View on GitHub
+                                    </a>
+                                </div>
+                            ` : ''}
+                        </div>
+                    </article>
+                `;
+            }).join('');
+        }
+        
+        // Modal functions to support full details
+        function openProjectModal(id) {
+            const projects = getProjects();
+            const project = projects.find(p => p.id === id);
+            if (!project) return;
+
+            document.getElementById('modalTitle').textContent = project.title;
+            document.getElementById('modalDescription').textContent = project.description;
+            document.getElementById('modalMeta').innerHTML = `
+                <span class="project-status ${project.status}">${project.status === 'completed' ? '✓ Completed' : '⟳ In Progress'}</span>
+                <span>${project.year || '2025'}</span>
+            `;
+            document.getElementById('modalTech').innerHTML = project.tech.map(t => `<span>${t}</span>`).join('');
+
+            // Links Section
+            const linksEl = document.getElementById('modalLinks');
+            linksEl.innerHTML = project.github ? `<a href="${project.github}" target="_blank">View on GitHub</a>` : '';
+
+
+            // Progress
+            const progressEl = document.getElementById('modalProgress');
+            if (project.status === 'underway') {
+                progressEl.innerHTML = `
+                    <div class="progress-label">
+                        <span>Progress</span>
+                        <span>${project.progress}%</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: ${project.progress}%"></div>
+                    </div>
+                    <div class="project-timeline">${project.startDate || ''} ${project.startDate && project.endDate ? '–' : ''} ${project.endDate || ''}</div>
+                `;
+                progressEl.style.display = 'block';
+            } else {
+                progressEl.style.display = 'none';
+            }
+
+            // Video
+            const videoContainerEl = document.getElementById('modalVideoContainer');
+            const videoEl = document.getElementById('modalVideo');
+            if (project.video) {
+                // IMPORTANT: Ensure the URL is a valid embed link (e.g., YouTube /embed/...)
+                videoEl.src = project.video; 
+                videoContainerEl.style.display = 'block';
+            } else {
+                videoEl.src = '';
+                videoContainerEl.style.display = 'none';
+            }
+
+            // Gallery
+            const galleryEl = document.getElementById('modalGallery');
+            if (project.images && project.images.length > 0) {
+                galleryEl.innerHTML = project.images.map(img => `<img src="${img}" alt="Project Image" onclick="openFullscreenImage(this.src)">`).join('');
+            } else {
+                galleryEl.innerHTML = '<p style="color:#666; font-size: 14px; text-align: center;">No images available for this project.</p>';
+            }
+
+            document.getElementById('projectModal').classList.add('active');
+            document.body.style.overflow = 'hidden'; // Prevent scrolling background
+        }
+
+        function closeProjectModal() {
+            document.getElementById('projectModal').classList.remove('active');
+            document.body.style.overflow = '';
+            const videoEl = document.getElementById('modalVideo');
+            if (videoEl) videoEl.src = ''; // Stop video playback
+        }
+        
+        function openFullscreenImage(src) {
+            const img = new Image();
+            img.src = src;
+            img.style.position = 'fixed';
+            img.style.top = '0';
+            img.style.left = '0';
+            img.style.width = '100%';
+            img.style.height = '100%';
+            img.style.objectFit = 'contain';
+            img.style.zIndex = '4000';
+            img.style.background = 'rgba(0,0,0,0.95)';
+            document.body.appendChild(img);
+            img.onclick = () => document.body.removeChild(img);
+        }
+
+        function displayProjectsList(projects) {
+            const list = document.getElementById('projectsList');
+            
+            if (projects.length === 0) {
+                list.innerHTML = '<p style="color: #999; text-align: center;">No projects yet.</p>';
+                return;
+            }
+
+            list.innerHTML = projects.map(project => `
+                <div class="project-item">
+                    <div class="project-item-info">
+                        <h4>${project.title}</h4>
+                        <p>${project.status === 'completed' ? '✓ Completed' : '⟳ In Progress'} • ${project.year || '2025'} • ${project.images ? project.images.length + ' images' : 'No images'}</p>
+                    </div>
+                    <div class="project-item-actions">
+                        <button type="button" class="btn-sm edit" onclick="editProject(${project.id})">Edit</button>
+                        <button type="button" class="btn-sm delete" onclick="deleteProject(${project.id})">Delete</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function resetProjectForm() {
+            document.getElementById('projectForm').reset();
+            document.getElementById('imagesPreviewContainer').innerHTML = '';
+            editingId = null;
+            const submitBtn = document.getElementById('projectSubmitBtn');
+            submitBtn.textContent = 'Add Project';
+            const clearBtn = document.querySelector('#projectForm .btn-secondary');
+            clearBtn.textContent = 'Clear';
+        }
+
+        // Skills Management
+        function saveSkills(e) {
+            e.preventDefault();
+            
+            const skills = {
+                ml: document.getElementById('mlSkills').value.split('\n').filter(s => s.trim()),
+                quant: document.getElementById('quantSkills').value.split('\n').filter(s => s.trim()),
+                tools: document.getElementById('toolsSkills').value.split('\n').filter(s => s.trim())
+            };
+
+            try {
+                localStorage.setItem(STORAGE_KEYS.skills, JSON.stringify(skills));
+                displaySkills(skills);
+                showMessage('skillsMessage', 'Skills saved successfully!', 'success');
+                loadPortfolioData();
+            } catch (error) {
+                showMessage('skillsMessage', 'Error saving skills (check storage quota)', 'error');
+                console.error('Save skills error:', error);
+            }
+        }
+
+        function updateSkillsForm(skills) {
+            document.getElementById('mlSkills').value = skills.ml?.join('\n') || '';
+            document.getElementById('quantSkills').value = skills.quant?.join('\n') || '';
+            document.getElementById('toolsSkills').value = skills.tools?.join('\n') || '';
+        }
+
+        function displaySkills(skills) {
+            const container = document.getElementById('skillsContainer');
+            
+            const skillGroups = [
+                { title: 'ML & AI', items: skills.ml || [] },
+                { title: 'Quantitative Finance', items: skills.quant || [] },
+                { title: 'Data & Tools', items: skills.tools || [] }
+            ];
+
+            container.innerHTML = skillGroups.map(group => `
+                <div class="skill-group">
+                    <h3>${group.title}</h3>
+                    <ul>
+                        ${group.items.map(skill => `<li>${skill}</li>`).join('')}
+                    </ul>
+                </div>
+            `).join('');
+        }
+
+        // Settings - Change Password
+        function changePassword(e) {
+            e.preventDefault();
+            const current = document.getElementById('currentPassword').value;
+            const newPass = document.getElementById('newPassword').value;
+            const confirm = document.getElementById('confirmPassword').value;
+
+            if (newPass !== confirm) {
+                showMessage('settingsMessage', 'Passwords do not match', 'error');
+                return;
+            }
+
+            if (newPass.length < 4) {
+                showMessage('settingsMessage', 'Password must be at least 4 characters', 'error');
+                return;
+            }
+
+            try {
+                const stored = localStorage.getItem(STORAGE_KEYS.adminPassword);
+                const correctPassword = stored || DEFAULT_PASSWORD;
+
+                if (current !== correctPassword) {
+                    showMessage('settingsMessage', 'Current password is incorrect', 'error');
+                    return;
+                }
+
+                localStorage.setItem(STORAGE_KEYS.adminPassword, newPass);
+                document.getElementById('settingsForm').reset();
+                showMessage('settingsMessage', 'Password changed successfully!', 'success');
+            } catch (error) {
+                showMessage('settingsMessage', 'Error changing password', 'error');
+                console.error('Change password error:', error);
+            }
+        }
+
+        function showMessage(elementId, message, type) {
+            const element = document.getElementById(elementId);
+            element.innerHTML = `<div class="message ${type}">${message}</div>`;
+            setTimeout(() => {
+                element.innerHTML = '';
+            }, 3000);
+        }
+
+        // Close modal on outside click
+        document.getElementById('projectModal').addEventListener('click', (e) => {
+            if (e.target === e.currentTarget) closeProjectModal();
+        });
+
+        // Keyboard shortcut to access admin (Ctrl+Shift+A)
+        document.addEventListener('keydown', (e) => {
+            if (e.ctrlKey && e.shiftKey && e.key === 'A') {
+                if (document.getElementById('adminView').style.display === 'none') {
+                    document.getElementById('adminLock').classList.add('active');
+                }
+            }
+            if (e.key === 'Escape') {
+                closeProjectModal();
+            }
+        });
+    </script>
+</body>
+</html>

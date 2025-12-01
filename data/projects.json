@@ -1,0 +1,25 @@
+[
+    {
+        "id": "1",
+        "title": "Algorithmic Trading Bot",
+        "description": "A high-frequency trading bot utilizing machine learning to predict market movements and execute trades with sub-millisecond latency.",
+        "status": "completed",
+        "year": "2024",
+        "images": [],
+        "tech": ["Python", "TensorFlow", "Redis", "Docker"],
+        "github": "https://github.com",
+        "createdAt": 1701424210000
+    },
+    {
+        "id": "2",
+        "title": "Portfolio Optimizer",
+        "description": "Web application for optimizing investment portfolios using Modern Portfolio Theory and risk parity strategies.",
+        "status": "underway",
+        "progress": 65,
+        "startDate": "Jan 2025",
+        "endDate": "Mar 2025",
+        "images": [],
+        "tech": ["Next.js", "Python", "FastAPI"],
+        "createdAt": 1701414210000
+    }
+]
