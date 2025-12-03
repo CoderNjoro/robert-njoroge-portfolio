@@ -30,14 +30,26 @@ export function ProjectEditor() {
             tech: editingProject.tech || [],
         } as Project;
 
-        if (editingProject.id) {
-            await db.updateProject(projectToSave);
-        } else {
-            await db.addProject(projectToSave);
+        // Check if data size is reasonable (< 500KB per project)
+        const projectSize = JSON.stringify(projectToSave).length;
+        if (projectSize > 500000) {
+            alert(`Project data is too large (${Math.round(projectSize / 1024)}KB). Please reduce the number of images.`);
+            return;
         }
 
-        setEditingProject(null);
-        loadProjects();
+        try {
+            if (editingProject.id) {
+                await db.updateProject(projectToSave);
+            } else {
+                await db.addProject(projectToSave);
+            }
+
+            setEditingProject(null);
+            await loadProjects();
+        } catch (error) {
+            console.error('Failed to save project:', error);
+            alert('Failed to save project. Please try again or reduce the number of images.');
+        }
     };
 
     const handleDelete = async (id: string) => {
@@ -133,7 +145,7 @@ export function ProjectEditor() {
                     </div>
 
                     <div className="space-y-2">
-                        <label className="text-sm font-medium">Project Images</label>
+                        <label className="text-sm font-medium">Project Images (Max 3)</label>
                         <div className="grid grid-cols-2 gap-4 mb-2">
                             {editingProject.images?.map((img, idx) => (
                                 <div key={idx} className="relative aspect-video bg-muted rounded-md overflow-hidden group">
@@ -152,26 +164,56 @@ export function ProjectEditor() {
                                 </div>
                             ))}
                         </div>
-                        <input
-                            type="file"
-                            accept="image/*"
-                            multiple
-                            onChange={(e) => {
-                                const files = Array.from(e.target.files || []);
-                                files.forEach(file => {
-                                    const reader = new FileReader();
-                                    reader.onloadend = () => {
-                                        setEditingProject(prev => ({
-                                            ...prev!,
-                                            images: [...(prev?.images || []), reader.result as string]
-                                        }));
-                                    };
-                                    reader.readAsDataURL(file);
-                                });
-                            }}
-                            className="w-full p-2 border rounded-md"
-                        />
-                        <p className="text-xs text-muted-foreground">Upload images. First image will be the thumbnail.</p>
+                        {(editingProject.images?.length || 0) < 3 && (
+                            <input
+                                type="file"
+                                accept="image/*"
+                                multiple
+                                onChange={(e) => {
+                                    const files = Array.from(e.target.files || []);
+                                    const remainingSlots = 3 - (editingProject.images?.length || 0);
+                                    const filesToProcess = files.slice(0, remainingSlots);
+
+                                    if (files.length > remainingSlots) {
+                                        alert(`Only ${remainingSlots} more image(s) can be added. Maximum is 3 images per project.`);
+                                    }
+
+                                    filesToProcess.forEach(file => {
+                                        const reader = new FileReader();
+                                        reader.onloadend = () => {
+                                            // Compress image before storing
+                                            const img = new Image();
+                                            img.onload = () => {
+                                                const canvas = document.createElement('canvas');
+                                                const ctx = canvas.getContext('2d')!;
+
+                                                // Resize to max 800px width while maintaining aspect ratio
+                                                const maxWidth = 800;
+                                                const scale = Math.min(1, maxWidth / img.width);
+                                                canvas.width = img.width * scale;
+                                                canvas.height = img.height * scale;
+
+                                                ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+                                                // Compress to 70% quality
+                                                const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.7);
+
+                                                setEditingProject(prev => ({
+                                                    ...prev!,
+                                                    images: [...(prev?.images || []), compressedDataUrl]
+                                                }));
+                                            };
+                                            img.src = reader.result as string;
+                                        };
+                                        reader.readAsDataURL(file);
+                                    });
+                                }}
+                                className="w-full p-2 border rounded-md"
+                            />
+                        )}
+                        <p className="text-xs text-muted-foreground">
+                            {editingProject.images?.length || 0}/3 images. First image will be the thumbnail. Images are automatically compressed.
+                        </p>
                     </div>
 
                     <button type="submit" className="px-4 py-2 bg-primary text-primary-foreground rounded-md">
