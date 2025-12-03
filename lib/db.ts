@@ -33,7 +33,7 @@ const MOCK_PROFILE: Profile = {
     subtitle: 'Specializing in Quantitative Finance & Algorithmic Trading',
     bio: 'Focused on building intelligent systems for financial markets, developing machine learning models for algorithmic trading, and analyzing complex financial data patterns.',
     email: 'contact@example.com',
-    github: 'https://github.com',
+    github: 'https://github.com/CoderNjoro',
     linkedin: 'https://linkedin.com'
 };
 

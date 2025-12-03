@@ -101,6 +101,27 @@ export function ProjectEditor() {
                         />
                     </div>
 
+                    <div className="grid grid-cols-2 gap-4">
+                        <div className="space-y-2">
+                            <label className="text-sm font-medium">GitHub URL</label>
+                            <input
+                                className="w-full p-2 border rounded-md"
+                                value={editingProject.github || ''}
+                                onChange={e => setEditingProject({ ...editingProject, github: e.target.value })}
+                                placeholder="https://github.com/username/repo"
+                            />
+                        </div>
+                        <div className="space-y-2">
+                            <label className="text-sm font-medium">Live Demo URL</label>
+                            <input
+                                className="w-full p-2 border rounded-md"
+                                value={editingProject.link || ''}
+                                onChange={e => setEditingProject({ ...editingProject, link: e.target.value })}
+                                placeholder="https://example.com"
+                            />
+                        </div>
+                    </div>
+
                     <div className="space-y-2">
                         <label className="text-sm font-medium">Video URL (Embed Link)</label>
                         <input
