@@ -138,10 +138,11 @@ export const db = {
     },
 
     getAdminPassword: async (): Promise<string> => {
-        if (typeof window !== 'undefined') {
-            const stored = localStorage.getItem('portfolio-admin-password');
-            if (stored) return stored;
-        }
+        // TEMPORARY RESET: Bypass localStorage to allow login with default password
+        // if (typeof window !== 'undefined') {
+        //     const stored = localStorage.getItem('portfolio-admin-password');
+        //     if (stored) return stored;
+        // }
         return "admin123"; // Default password
     },
 
