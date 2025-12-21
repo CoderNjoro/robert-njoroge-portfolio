@@ -5,6 +5,17 @@ import { Project } from "@/types";
 import { db } from "@/lib/db";
 import { Plus, Pencil, Trash2, X } from "lucide-react";
 
+// UUID Generator
+const generateUUID = () => {
+    if (typeof crypto !== 'undefined' && crypto.randomUUID) {
+        return crypto.randomUUID();
+    }
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+        var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+        return v.toString(16);
+    });
+};
+
 export function ProjectEditor() {
     const [projects, setProjects] = useState<Project[]>([]);
     const [editingProject, setEditingProject] = useState<Partial<Project> | null>(null);
@@ -24,7 +35,7 @@ export function ProjectEditor() {
 
         const projectToSave = {
             ...editingProject,
-            id: editingProject.id || Date.now().toString(),
+            id: editingProject.id || generateUUID(),
             createdAt: editingProject.createdAt || Date.now(),
             images: editingProject.images || [],
             tech: editingProject.tech || [],

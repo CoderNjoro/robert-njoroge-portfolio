@@ -1,5 +1,4 @@
 import { Project, Profile, SkillGroup } from '@/types';
-import { createClient } from '@supabase/supabase-js';
 
 // Mock Data
 const MOCK_PROJECTS: Project[] = [
@@ -19,9 +18,7 @@ const MOCK_PROJECTS: Project[] = [
         title: 'Portfolio Optimizer',
         description: 'Web application for optimizing investment portfolios using Modern Portfolio Theory and risk parity strategies.',
         status: 'underway',
-        progress: 65,
-        startDate: 'Jan 2025',
-        endDate: 'Mar 2025',
+        year: '2025',
         images: [],
         tech: ['Next.js', 'Python', 'FastAPI'],
         createdAt: Date.now() - 10000,
@@ -43,18 +40,8 @@ const MOCK_SKILLS: SkillGroup[] = [
     { category: 'Data & Tools', skills: ['Python', 'SQL', 'Pandas', 'NumPy', 'AWS', 'Docker'] }
 ];
 
-// Supabase Client (initialized only if env vars exist)
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-const supabase = (supabaseUrl && supabaseKey) ? createClient(supabaseUrl, supabaseKey) : null;
-
 export const db = {
     getProjects: async (): Promise<Project[]> => {
-        if (supabase) {
-            const { data, error } = await supabase.from('projects').select('*').order('createdAt', { ascending: false });
-            if (!error && data) return data as any;
-        }
-
         try {
             const res = await fetch('/api/projects');
             if (res.ok) {
@@ -64,7 +51,6 @@ export const db = {
         } catch (error) {
             console.error("Failed to fetch projects:", error);
         }
-
         return MOCK_PROJECTS;
     },
 
@@ -84,12 +70,8 @@ export const db = {
         return MOCK_SKILLS;
     },
 
-    // Admin Actions (Mock implementation for local storage / Supabase)
+    // Admin Actions
     addProject: async (project: Project) => {
-        if (supabase) {
-            // Implement Supabase insert
-        }
-
         try {
             await fetch('/api/projects', {
                 method: 'POST',
@@ -98,6 +80,7 @@ export const db = {
             });
         } catch (error) {
             console.error("Failed to add project:", error);
+            throw error;
         }
     },
 
@@ -110,6 +93,7 @@ export const db = {
             });
         } catch (error) {
             console.error("Failed to update project:", error);
+            throw error;
         }
     },
 
@@ -122,6 +106,7 @@ export const db = {
             });
         } catch (error) {
             console.error("Failed to delete project:", error);
+            throw error;
         }
     },
 
