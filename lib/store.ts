@@ -18,13 +18,24 @@ export const getProjects = (): Project[] => {
 };
 
 export const saveProjects = (projects: Project[]) => {
+    // On Vercel, filesystem is read-only - skip local save
+    // GitHub sync is the only way to persist data on Vercel
+    if (process.env.VERCEL) {
+        return;
+    }
+    
     try {
         const dir = path.dirname(dataFilePath);
         if (!fs.existsSync(dir)) {
             fs.mkdirSync(dir, { recursive: true });
         }
         fs.writeFileSync(dataFilePath, JSON.stringify(projects, null, 4), 'utf-8');
-    } catch (error) {
+    } catch (error: any) {
+        // Silently fail if filesystem is read-only (e.g., on Vercel)
+        // GitHub sync will handle persistence
+        if (error?.code === 'EROFS') {
+            return;
+        }
         console.error("Error writing projects:", error);
     }
 };

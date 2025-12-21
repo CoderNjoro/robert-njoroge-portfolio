@@ -127,10 +127,13 @@ export async function POST(request: Request) {
             return NextResponse.json({ success: false, error: 'Invalid action' }, { status: 400 });
         }
 
-        // 1. Save locally (immediate feedback for dev/ephemeral prod)
-        saveProjects(projects);
+        // On Vercel, filesystem is read-only, so we skip local save
+        // GitHub sync is the only way to persist data on Vercel
+        if (!process.env.VERCEL) {
+            saveProjects(projects);
+        }
 
-        // 2. Sync to GitHub (for persistence on Vercel)
+        // Sync to GitHub (required for persistence on Vercel)
         const githubResult = await saveToGitHub(projects);
 
         if (!githubResult.success) {
