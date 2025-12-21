@@ -80,7 +80,11 @@ export const db = {
             });
             const data = await res.json();
             if (!res.ok) throw new Error(data.error || 'Failed to add project');
-            if (data.githubError) alert('Warning: Project saved locally but GitHub sync failed: ' + data.githubError);
+            // On Vercel, GitHub sync is required for persistence - treat failures as errors
+            if (data.githubError || !data.githubSynced) {
+                const errorMsg = data.githubError || 'GitHub sync failed - project will not persist on Vercel';
+                throw new Error(`Failed to save project: ${errorMsg}. Please check your GITHUB_TOKEN environment variable.`);
+            }
             return data;
         } catch (error: any) {
             console.error("Failed to add project:", error);
@@ -97,7 +101,11 @@ export const db = {
             });
             const data = await res.json();
             if (!res.ok) throw new Error(data.error || 'Failed to update project');
-            if (data.githubError) alert('Warning: Project updated locally but GitHub sync failed: ' + data.githubError);
+            // On Vercel, GitHub sync is required for persistence - treat failures as errors
+            if (data.githubError || !data.githubSynced) {
+                const errorMsg = data.githubError || 'GitHub sync failed - project will not persist on Vercel';
+                throw new Error(`Failed to update project: ${errorMsg}. Please check your GITHUB_TOKEN environment variable.`);
+            }
             return data;
         } catch (error: any) {
             console.error("Failed to update project:", error);
@@ -114,7 +122,11 @@ export const db = {
             });
             const data = await res.json();
             if (!res.ok) throw new Error(data.error || 'Failed to delete project');
-            if (data.githubError) alert('Warning: Project deleted locally but GitHub sync failed: ' + data.githubError);
+            // On Vercel, GitHub sync is required for persistence - treat failures as errors
+            if (data.githubError || !data.githubSynced) {
+                const errorMsg = data.githubError || 'GitHub sync failed - deletion will not persist on Vercel';
+                throw new Error(`Failed to delete project: ${errorMsg}. Please check your GITHUB_TOKEN environment variable.`);
+            }
             return data;
         } catch (error: any) {
             console.error("Failed to delete project:", error);

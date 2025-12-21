@@ -10,7 +10,10 @@ const BRANCH = 'main';
 
 async function saveToGitHub(projects: any[]) {
     if (!GITHUB_TOKEN) {
-        return { success: false, error: 'GITHUB_TOKEN is missing in environment variables' };
+        return { 
+            success: false, 
+            error: 'GITHUB_TOKEN is missing in environment variables. Please set it in your Vercel project settings to enable project persistence.' 
+        };
     }
 
     try {
@@ -38,11 +41,26 @@ async function saveToGitHub(projects: any[]) {
         }
 
         // 2. Prepare content
-        const content = Buffer.from(JSON.stringify(projects, null, 4)).toString('base64');
-
-        // Check size (GitHub API limit for this endpoint is 25MB, but Vercel limit is ~4.5MB)
-        if (content.length > 4000000) {
-            return { success: false, error: 'Project data is too large for Vercel/GitHub sync. Please use fewer or smaller images.' };
+        const jsonString = JSON.stringify(projects, null, 4);
+        const jsonSizeMB = jsonString.length / (1024 * 1024);
+        
+        // Check JSON size before base64 encoding (base64 adds ~33% overhead)
+        if (jsonSizeMB > 3) {
+            return { 
+                success: false, 
+                error: `Project data is too large (${jsonSizeMB.toFixed(2)}MB). The file exceeds Vercel's limits. Please reduce image sizes or remove some images. Maximum recommended size: 3MB.` 
+            };
+        }
+        
+        const content = Buffer.from(jsonString).toString('base64');
+        
+        // Check base64 size (GitHub API limit for this endpoint is 25MB, but Vercel limit is ~4.5MB)
+        const base64SizeMB = content.length / (1024 * 1024);
+        if (base64SizeMB > 4) {
+            return { 
+                success: false, 
+                error: `Project data is too large after encoding (${base64SizeMB.toFixed(2)}MB). Please use fewer or smaller images. Maximum recommended size: 3MB JSON (before encoding).` 
+            };
         }
 
         // 3. Update or Create file
@@ -117,11 +135,12 @@ export async function POST(request: Request) {
 
         if (!githubResult.success) {
             console.error('GitHub sync failed:', githubResult.error);
-            // We still return 200 but include the error so the UI can alert the user
+            // On Vercel, GitHub sync is required for persistence
+            // Return success: true but githubSynced: false so client can handle appropriately
             return NextResponse.json({
                 success: true,
                 githubSynced: false,
-                githubError: githubResult.error,
+                githubError: githubResult.error || 'Unknown GitHub sync error',
                 projects
             });
         }

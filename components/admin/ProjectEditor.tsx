@@ -52,14 +52,11 @@ export function ProjectEditor() {
             let response;
             if (editingProject.id) {
                 response = await db.updateProject(projectToSave);
+                alert('Project updated successfully!');
             } else {
                 response = await db.addProject(projectToSave);
+                alert('Project added successfully!');
             }
-
-            // Since db.addProject/updateProject don't return the raw response currently,
-            // let's adjust them or just handle the successful call.
-            // Actually, lib/db.ts just fetch() and doesn't return the json.
-            // Let's modify lib/db.ts to return the response json.
 
             setEditingProject(null);
             await loadProjects();
@@ -71,8 +68,14 @@ export function ProjectEditor() {
 
     const handleDelete = async (id: string) => {
         if (confirm("Delete this project?")) {
-            await db.deleteProject(id);
-            loadProjects();
+            try {
+                await db.deleteProject(id);
+                alert('Project deleted successfully!');
+                await loadProjects();
+            } catch (error: any) {
+                console.error('Failed to delete project:', error);
+                alert('Failed to delete project: ' + (error.message || 'Unknown error'));
+            }
         }
     };
 
