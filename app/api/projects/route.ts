@@ -6,17 +6,18 @@ const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
 const REPO_OWNER = 'CoderNjoro';
 const REPO_NAME = 'Portfolio';
 const FILE_PATH = 'data/projects.json';
-const BRANCH = 'main'; // Adjust if using 'master'
+const BRANCH = 'main';
 
 async function saveToGitHub(projects: any[]) {
     if (!GITHUB_TOKEN) {
-        console.warn('GITHUB_TOKEN is missing in environment variables. GitHub sync skipped.');
-        return false;
+        return { success: false, error: 'GITHUB_TOKEN is missing in environment variables' };
     }
 
     try {
-        // 1. Get current file SHA to allow update
+        console.log('Syncing to GitHub...');
         const getUrl = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${FILE_PATH}`;
+
+        // 1. Get current file data to get the SHA
         const getRes = await fetch(getUrl, {
             headers: {
                 'Authorization': `Bearer ${GITHUB_TOKEN}`,
@@ -29,12 +30,22 @@ async function saveToGitHub(projects: any[]) {
         if (getRes.ok) {
             const fileData = await getRes.json();
             sha = fileData.sha;
+            console.log('Found existing file SHA:', sha);
+        } else if (getRes.status !== 404) {
+            const err = await getRes.text();
+            console.error('GitHub GET error:', err);
+            return { success: false, error: `GitHub GET failed: ${getRes.status} ${err}` };
         }
 
-        // 2. Update file
-        // Convert content to base64
+        // 2. Prepare content
         const content = Buffer.from(JSON.stringify(projects, null, 4)).toString('base64');
 
+        // Check size (GitHub API limit for this endpoint is 25MB, but Vercel limit is ~4.5MB)
+        if (content.length > 4000000) {
+            return { success: false, error: 'Project data is too large for Vercel/GitHub sync. Please use fewer or smaller images.' };
+        }
+
+        // 3. Update or Create file
         const putRes = await fetch(getUrl, {
             method: 'PUT',
             headers: {
@@ -45,26 +56,32 @@ async function saveToGitHub(projects: any[]) {
             body: JSON.stringify({
                 message: 'Update projects via Admin Panel',
                 content: content,
-                sha: sha || undefined, // undefined if creating new file
+                sha: sha || undefined,
                 branch: BRANCH
             })
         });
 
         if (!putRes.ok) {
             const errorText = await putRes.text();
-            console.error('GitHub API Error:', errorText);
-            return false;
+            console.error('GitHub PUT error:', errorText);
+            return { success: false, error: `GitHub PUT failed: ${putRes.status} ${errorText}` };
         }
-        return true;
-    } catch (error) {
-        console.error('GitHub save error:', error);
-        return false;
+
+        console.log('GitHub sync successful');
+        return { success: true };
+    } catch (error: any) {
+        console.error('GitHub sync exception:', error);
+        return { success: false, error: error.message || 'Unknown GitHub sync error' };
     }
 }
 
 export async function GET() {
-    const projects = getProjects();
-    return NextResponse.json(projects);
+    try {
+        const projects = getProjects();
+        return NextResponse.json(projects);
+    } catch (error) {
+        return NextResponse.json([], { status: 500 });
+    }
 }
 
 export async function POST(request: Request) {
@@ -74,29 +91,48 @@ export async function POST(request: Request) {
         let projects = getProjects();
 
         if (action === 'create') {
+            // Check if ID already exists (prevent duplicates)
+            if (projects.some(p => p.id === project.id)) {
+                return NextResponse.json({ success: false, error: 'Project ID already exists' }, { status: 400 });
+            }
             projects = [project, ...projects];
         } else if (action === 'update') {
             const index = projects.findIndex((p: any) => p.id === project.id);
             if (index !== -1) {
                 projects[index] = project;
+            } else {
+                return NextResponse.json({ success: false, error: 'Project not found for update' }, { status: 404 });
             }
         } else if (action === 'delete') {
             projects = projects.filter((p: any) => p.id !== id);
+        } else {
+            return NextResponse.json({ success: false, error: 'Invalid action' }, { status: 400 });
         }
 
-        // Save locally (always works in dev, ephemeral in prod)
+        // 1. Save locally (immediate feedback for dev/ephemeral prod)
         saveProjects(projects);
 
-        // Save to GitHub (persistent in prod)
-        const githubSynced = await saveToGitHub(projects);
+        // 2. Sync to GitHub (for persistence on Vercel)
+        const githubResult = await saveToGitHub(projects);
+
+        if (!githubResult.success) {
+            console.error('GitHub sync failed:', githubResult.error);
+            // We still return 200 but include the error so the UI can alert the user
+            return NextResponse.json({
+                success: true,
+                githubSynced: false,
+                githubError: githubResult.error,
+                projects
+            });
+        }
 
         return NextResponse.json({
             success: true,
-            githubSynced,
+            githubSynced: true,
             projects
         });
-    } catch (error) {
-        console.error('API Error:', error);
-        return NextResponse.json({ success: false, error: 'Failed to process request' }, { status: 500 });
+    } catch (error: any) {
+        console.error('API Route POST error:', error);
+        return NextResponse.json({ success: false, error: error.message || 'Failed to process request' }, { status: 500 });
     }
 }

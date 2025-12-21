@@ -49,17 +49,23 @@ export function ProjectEditor() {
         }
 
         try {
+            let response;
             if (editingProject.id) {
-                await db.updateProject(projectToSave);
+                response = await db.updateProject(projectToSave);
             } else {
-                await db.addProject(projectToSave);
+                response = await db.addProject(projectToSave);
             }
+
+            // Since db.addProject/updateProject don't return the raw response currently,
+            // let's adjust them or just handle the successful call.
+            // Actually, lib/db.ts just fetch() and doesn't return the json.
+            // Let's modify lib/db.ts to return the response json.
 
             setEditingProject(null);
             await loadProjects();
-        } catch (error) {
+        } catch (error: any) {
             console.error('Failed to save project:', error);
-            alert('Failed to save project. Please try again or reduce the number of images.');
+            alert('Failed to save project: ' + (error.message || 'Unknown error'));
         }
     };
 

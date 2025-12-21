@@ -73,12 +73,16 @@ export const db = {
     // Admin Actions
     addProject: async (project: Project) => {
         try {
-            await fetch('/api/projects', {
+            const res = await fetch('/api/projects', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ action: 'create', project })
             });
-        } catch (error) {
+            const data = await res.json();
+            if (!res.ok) throw new Error(data.error || 'Failed to add project');
+            if (data.githubError) alert('Warning: Project saved locally but GitHub sync failed: ' + data.githubError);
+            return data;
+        } catch (error: any) {
             console.error("Failed to add project:", error);
             throw error;
         }
@@ -86,12 +90,16 @@ export const db = {
 
     updateProject: async (project: Project) => {
         try {
-            await fetch('/api/projects', {
+            const res = await fetch('/api/projects', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ action: 'update', project })
             });
-        } catch (error) {
+            const data = await res.json();
+            if (!res.ok) throw new Error(data.error || 'Failed to update project');
+            if (data.githubError) alert('Warning: Project updated locally but GitHub sync failed: ' + data.githubError);
+            return data;
+        } catch (error: any) {
             console.error("Failed to update project:", error);
             throw error;
         }
@@ -99,12 +107,16 @@ export const db = {
 
     deleteProject: async (id: string) => {
         try {
-            await fetch('/api/projects', {
+            const res = await fetch('/api/projects', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ action: 'delete', id })
             });
-        } catch (error) {
+            const data = await res.json();
+            if (!res.ok) throw new Error(data.error || 'Failed to delete project');
+            if (data.githubError) alert('Warning: Project deleted locally but GitHub sync failed: ' + data.githubError);
+            return data;
+        } catch (error: any) {
             console.error("Failed to delete project:", error);
             throw error;
         }
