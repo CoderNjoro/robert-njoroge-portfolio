@@ -58,7 +58,7 @@ export function ProjectCard({ project, onClick }: ProjectCardProps) {
                             </span>
                         ))}
                     </div>
-                    <div className="flex items-center text-xs font-black uppercase tracking-widest text-primary group-hover:translate-x-1 transition-transform">
+                    <div className="flex items-center text-xs font-black uppercase tracking-widest text-[#4ade80] group-hover:text-[#3ce676] group-hover:translate-x-2 transition-all">
                         Read Project Details
                         <ArrowRight className="w-4 h-4 ml-2" />
                     </div>

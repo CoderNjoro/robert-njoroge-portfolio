@@ -35,7 +35,7 @@ export function Contact({ profile }: ContactProps) {
                                 {profile.email && (
                                     <a
                                         href={`mailto:${profile.email}`}
-                                        className="inline-flex items-center justify-between p-6 bg-primary text-primary-foreground rounded-2xl font-black uppercase tracking-widest text-xs hover:scale-[1.02] active:scale-[0.98] transition-all"
+                                        className="inline-flex items-center justify-between p-6 bg-[#4ade80] text-black rounded-2xl font-black uppercase tracking-widest text-xs hover:bg-[#3ce676] hover:scale-[1.02] active:scale-[0.98] transition-all shadow-[0_20px_40px_rgba(74,222,128,0.1)]"
                                     >
                                         Send an Email
                                         <Mail className="w-5 h-5 flex-shrink-0" />
@@ -47,7 +47,7 @@ export function Contact({ profile }: ContactProps) {
                                             href={profile.github}
                                             target="_blank"
                                             rel="noopener noreferrer"
-                                            className="flex items-center justify-between p-6 bg-background border-2 border-black/5 rounded-2xl font-black uppercase tracking-widest text-xs hover:bg-muted transition-all"
+                                            className="flex items-center justify-between p-6 bg-background border-2 border-[#fb923c]/20 hover:border-[#fb923c] rounded-2xl font-black uppercase tracking-widest text-xs hover:bg-[#fb923c]/5 transition-all"
                                         >
                                             GitHub
                                             <Github className="w-5 h-5 flex-shrink-0" />
@@ -58,7 +58,7 @@ export function Contact({ profile }: ContactProps) {
                                             href={profile.linkedin}
                                             target="_blank"
                                             rel="noopener noreferrer"
-                                            className="flex items-center justify-between p-6 bg-background border-2 border-black/5 rounded-2xl font-black uppercase tracking-widest text-xs hover:bg-muted transition-all"
+                                            className="flex items-center justify-between p-6 bg-background border-2 border-[#fb923c]/20 hover:border-[#fb923c] rounded-2xl font-black uppercase tracking-widest text-xs hover:bg-[#fb923c]/5 transition-all"
                                         >
                                             LinkedIn
                                             <Linkedin className="w-5 h-5 flex-shrink-0" />

@@ -45,7 +45,7 @@ export function Navbar() {
                     <a
                         href="/resume.pdf"
                         target="_blank"
-                        className="hidden sm:inline-flex items-center justify-center text-xs font-black uppercase tracking-[0.2em] border-b-2 border-primary pb-1 hover:text-primary transition-all"
+                        className="hidden sm:inline-flex items-center justify-center px-6 py-3 rounded-xl bg-[#fb923c] text-black text-[10px] font-black uppercase tracking-[0.2em] hover:bg-[#f97316] hover:scale-105 active:scale-95 transition-all shadow-lg shadow-orange-500/10"
                     >
                         View Resume
                     </a>

@@ -69,7 +69,7 @@ export function Hero({ profile: initialProfile }: HeroProps) {
                         <div className="flex flex-wrap items-center gap-6 pt-6">
                             <button
                                 onClick={() => document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' })}
-                                className="group relative inline-flex items-center justify-center gap-3 rounded-2xl text-xs font-black uppercase tracking-[0.2em] transition-all duration-300 bg-primary text-primary-foreground hover:bg-primary/95 hover:scale-[1.02] active:scale-[0.98] h-16 px-12 shadow-2xl shadow-primary/30"
+                                className="group relative inline-flex items-center justify-center gap-3 rounded-2xl text-xs font-black uppercase tracking-[0.2em] transition-all duration-300 bg-[#4ade80] text-black hover:bg-[#3ce676] hover:scale-[1.02] active:scale-[0.98] h-16 px-12 shadow-[0_20px_40px_rgba(74,222,128,0.2)]"
                             >
                                 View Projects
                                 <svg
@@ -90,7 +90,7 @@ export function Hero({ profile: initialProfile }: HeroProps) {
 
                             <button
                                 onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
-                                className="inline-flex items-center justify-center gap-3 rounded-2xl text-xs font-black uppercase tracking-[0.2em] h-16 px-12 hover:bg-muted border-2 border-black/5 dark:border-white/5 active:scale-95 transition-all"
+                                className="inline-flex items-center justify-center gap-3 rounded-2xl text-xs font-black uppercase tracking-[0.2em] h-16 px-12 bg-[#fb923c] text-black hover:bg-[#f97316] hover:scale-[1.02] active:scale-[0.98] transition-all shadow-[0_20px_40px_rgba(251,146,60,0.2)]"
                             >
                                 Let's Connect
                             </button>
