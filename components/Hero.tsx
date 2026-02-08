@@ -34,23 +34,23 @@ export function Hero({ profile: initialProfile }: HeroProps) {
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.6, ease: "easeOut" }}
-                        className="space-y-6 max-w-4xl"
+                        className="space-y-8 max-w-4xl"
                     >
-                        {/* Status Badge */}
+                        {/* Status Badge - Subtler */}
                         <motion.div
                             initial={{ opacity: 0, x: -20 }}
                             animate={{ opacity: 1, x: 0 }}
                             transition={{ delay: 0.2, duration: 0.5 }}
-                            className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-green-500/5 border border-green-500/10 text-green-600 text-xs font-bold uppercase tracking-widest"
+                            className="inline-flex items-center gap-3 px-4 py-1.5 rounded-full bg-secondary/80 border border-black/5 dark:border-white/5 text-muted-foreground text-[10px] font-black uppercase tracking-[0.2em]"
                         >
                             <span className="relative flex h-2 w-2">
                                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
                                 <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
                             </span>
-                            Available for new opportunities
+                            Forward-Thinking Software Engineer
                         </motion.div>
 
-                        <h1 className="text-5xl md:text-8xl font-black tracking-tight leading-[0.9] text-foreground">
+                        <h1 className="text-6xl md:text-9xl font-black tracking-tight leading-[0.85] text-foreground">
                             {profile.title.split(' ').map((word, i) => (
                                 <span key={i} className="inline-block mr-4 last:mr-0">
                                     {word}
@@ -58,22 +58,20 @@ export function Hero({ profile: initialProfile }: HeroProps) {
                             ))}
                         </h1>
 
-                        <p className="text-2xl md:text-3xl font-medium text-muted-foreground/80 tracking-tight max-w-2xl">
+                        <p className="text-2xl md:text-4xl font-black text-muted-foreground/60 tracking-tight max-w-3xl leading-tight">
                             {profile.subtitle}
                         </p>
 
-                        <div className="h-px w-20 bg-primary/20" />
-
-                        <p className="max-w-xl text-lg md:text-xl text-muted-foreground leading-relaxed font-normal">
+                        <p className="max-w-2xl text-lg md:text-xl text-muted-foreground/80 leading-relaxed font-medium">
                             {profile.bio}
                         </p>
 
-                        <div className="flex flex-wrap items-center gap-4 pt-4">
+                        <div className="flex flex-wrap items-center gap-6 pt-6">
                             <button
                                 onClick={() => document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' })}
-                                className="group relative inline-flex items-center justify-center gap-2 rounded-xl text-sm font-bold transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/95 hover:scale-[1.02] active:scale-[0.98] h-14 px-10 shadow-2xl shadow-primary/20"
+                                className="group relative inline-flex items-center justify-center gap-3 rounded-2xl text-xs font-black uppercase tracking-[0.2em] transition-all duration-300 bg-primary text-primary-foreground hover:bg-primary/95 hover:scale-[1.02] active:scale-[0.98] h-16 px-12 shadow-2xl shadow-primary/30"
                             >
-                                Explorer Projects
+                                View Projects
                                 <svg
                                     xmlns="http://www.w3.org/2000/svg"
                                     width="24"
@@ -81,10 +79,10 @@ export function Hero({ profile: initialProfile }: HeroProps) {
                                     viewBox="0 0 24 24"
                                     fill="none"
                                     stroke="currentColor"
-                                    strokeWidth="2.5"
+                                    strokeWidth="3"
                                     strokeLinecap="round"
                                     strokeLinejoin="round"
-                                    className="w-4 h-4 transition-transform group-hover:translate-y-1"
+                                    className="w-5 h-5 transition-transform group-hover:translate-y-1"
                                 >
                                     <path d="M12 5v14M19 12l-7 7-7-7" />
                                 </svg>
@@ -92,9 +90,9 @@ export function Hero({ profile: initialProfile }: HeroProps) {
 
                             <button
                                 onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
-                                className="inline-flex items-center justify-center gap-2 rounded-xl text-sm font-bold transition-all h-14 px-10 hover:bg-muted border border-black/5 dark:border-white/5 active:scale-95"
+                                className="inline-flex items-center justify-center gap-3 rounded-2xl text-xs font-black uppercase tracking-[0.2em] h-16 px-12 hover:bg-muted border-2 border-black/5 dark:border-white/5 active:scale-95 transition-all"
                             >
-                                Let's Talk
+                                Let's Connect
                             </button>
                         </div>
                     </motion.div>

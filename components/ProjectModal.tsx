@@ -35,52 +35,52 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
     return (
         <AnimatePresence>
             {project && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 md:p-6 drop-shadow-2xl">
+                <div className="fixed inset-0 z-[100] flex items-center justify-center p-0 sm:p-4 md:p-8">
+                    {/* Darker, more solid backdrop to prevent background content bleed */}
                     <motion.div
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
                         onClick={onClose}
-                        className="absolute inset-0 bg-background/90 backdrop-blur-md"
+                        className="absolute inset-0 bg-black/95 backdrop-blur-sm"
                     />
+
                     <motion.div
-                        initial={{ opacity: 0, scale: 0.98, y: 10 }}
+                        initial={{ opacity: 0, scale: 0.95, y: 20 }}
                         animate={{ opacity: 1, scale: 1, y: 0 }}
-                        exit={{ opacity: 0, scale: 0.98, y: 10 }}
-                        className={`relative w-full ${isExpanded ? 'max-w-full h-full' : 'max-w-6xl max-h-[90vh]'} bg-card border shadow-2xl rounded-xl overflow-hidden flex flex-col transition-all duration-300`}
+                        exit={{ opacity: 0, scale: 0.95, y: 20 }}
+                        className={`relative w-full ${isExpanded ? 'max-w-full h-full' : 'max-w-6xl max-h-[95vh]'} bg-card border shadow-2xl rounded-none sm:rounded-2xl overflow-hidden flex flex-col transition-all duration-300 z-10`}
                     >
-                        {/* Header */}
-                        <div className="flex items-center justify-between p-4 md:p-6 border-b bg-card/50 backdrop-blur-sm sticky top-0 z-20">
-                            <div>
-                                <h2 className="text-xl md:text-2xl font-bold tracking-tight">{project.title}</h2>
-                                <p className="text-sm text-muted-foreground mt-1 flex items-center gap-2">
+                        {/* Header - Solid background */}
+                        <div className="flex items-center justify-between p-5 md:p-7 border-b bg-card z-30 shadow-sm">
+                            <div className="space-y-1">
+                                <h2 className="text-2xl md:text-3xl font-black tracking-tight">{project.title}</h2>
+                                <div className="flex items-center gap-3">
                                     {project.year && (
-                                        <>
-                                            <Calendar className="w-3.5 h-3.5" />
+                                        <div className="text-sm text-muted-foreground flex items-center gap-1.5 font-medium">
+                                            <Calendar className="w-4 h-4" />
                                             {project.year}
-                                            <span className="opacity-30">|</span>
-                                        </>
+                                        </div>
                                     )}
-                                    <span className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider ${project.status === 'completed' ? 'bg-green-500/10 text-green-600' : 'bg-blue-500/10 text-blue-600'}`}>
-                                        {project.status === 'completed' ? <CheckCircle2 className="w-3 h-3" /> : <Clock className="w-3 h-3" />}
+                                    <div className={`px-2.5 py-1 rounded-md text-[10px] font-black uppercase tracking-widest ${project.status === 'completed' ? 'bg-green-500/10 text-green-600 border border-green-500/20' : 'bg-blue-500/10 text-blue-600 border border-blue-500/20'}`}>
                                         {project.status}
-                                    </span>
-                                </p>
+                                    </div>
+                                </div>
                             </div>
                             <button
                                 onClick={onClose}
-                                className="p-2.5 rounded-full hover:bg-muted transition-all active:scale-95 group shadow-sm bg-background border"
+                                className="p-3 rounded-xl hover:bg-muted transition-all active:scale-90 group bg-background border shadow-sm"
                                 aria-label="Close modal"
                             >
-                                <X className="w-5 h-5 group-hover:rotate-90 transition-transform duration-300" />
+                                <X className="w-6 h-6 group-hover:rotate-90 transition-transform duration-300" />
                             </button>
                         </div>
 
-                        <div className="flex-1 overflow-y-auto no-scrollbar">
-                            <div className="grid grid-cols-1 lg:grid-cols-5 h-full">
-                                {/* Media Section (Left/Top) */}
-                                <div className="lg:col-span-3 bg-muted/30 relative flex flex-col h-full border-b lg:border-b-0 lg:border-r">
-                                    <div className="relative flex-1 min-h-[300px] md:min-h-[450px] bg-black flex items-center justify-center overflow-hidden group">
+                        <div className="flex-1 overflow-y-auto overflow-x-hidden no-scrollbar bg-background">
+                            <div className="grid grid-cols-1 lg:grid-cols-12 min-h-full">
+                                {/* Media Section - Larger share */}
+                                <div className="lg:col-span-8 bg-black relative flex flex-col min-h-[400px] lg:min-h-0 border-b lg:border-b-0 lg:border-r border-black/10">
+                                    <div className="relative flex-1 flex items-center justify-center overflow-hidden group">
                                         {mediaItems.length > 0 ? (
                                             <>
                                                 {mediaItems[activeMediaIndex].type === 'video' ? (
@@ -95,111 +95,82 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
                                                         key={activeMediaIndex}
                                                         initial={{ opacity: 0 }}
                                                         animate={{ opacity: 1 }}
-                                                        transition={{ duration: 0.3 }}
+                                                        transition={{ duration: 0.4 }}
                                                         src={mediaItems[activeMediaIndex].url}
-                                                        alt={`${project.title} - View ${activeMediaIndex + 1}`}
-                                                        className={`w-full h-full ${isExpanded ? 'object-contain' : 'object-contain'} transition-all`}
+                                                        alt={`${project.title} screenshot`}
+                                                        className="w-full h-full object-contain pointer-events-none"
                                                     />
                                                 )}
 
-                                                {/* Nav Controls */}
+                                                {/* Navigation controls - High visibility */}
                                                 {mediaItems.length > 1 && (
                                                     <>
                                                         <button
                                                             onClick={handlePrev}
-                                                            className="absolute left-4 top-1/2 -translate-y-1/2 p-3 rounded-full bg-white/10 backdrop-blur-md text-white border border-white/20 opacity-0 group-hover:opacity-100 transition-all hover:bg-white/20 hover:scale-110 active:scale-90 z-30"
+                                                            className="absolute left-6 top-1/2 -translate-y-1/2 p-4 rounded-2xl bg-black/40 backdrop-blur-xl text-white border border-white/10 opacity-0 group-hover:opacity-100 transition-all hover:bg-black/60 hover:scale-110 active:scale-95 z-40 shadow-2xl"
                                                         >
-                                                            <ChevronLeft className="w-6 h-6" />
+                                                            <ChevronLeft className="w-8 h-8 stroke-[3]" />
                                                         </button>
                                                         <button
                                                             onClick={handleNext}
-                                                            className="absolute right-4 top-1/2 -translate-y-1/2 p-3 rounded-full bg-white/10 backdrop-blur-md text-white border border-white/20 opacity-0 group-hover:opacity-100 transition-all hover:bg-white/20 hover:scale-110 active:scale-90 z-30"
+                                                            className="absolute right-6 top-1/2 -translate-y-1/2 p-4 rounded-2xl bg-black/40 backdrop-blur-xl text-white border border-white/10 opacity-0 group-hover:opacity-100 transition-all hover:bg-black/60 hover:scale-110 active:scale-95 z-40 shadow-2xl"
                                                         >
-                                                            <ChevronRight className="w-6 h-6" />
+                                                            <ChevronRight className="w-8 h-8 stroke-[3]" />
                                                         </button>
                                                     </>
                                                 )}
 
-                                                <div className="absolute top-4 right-4 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity z-30">
-                                                    <button
-                                                        onClick={() => setIsExpanded(!isExpanded)}
-                                                        className="p-2 rounded-lg bg-black/50 text-white backdrop-blur-md hover:bg-black/70 transition-colors"
-                                                        title={isExpanded ? "Exit Full Screen" : "Full Screen"}
-                                                    >
-                                                        {isExpanded ? <X className="w-4 h-4" /> : <Play className="w-4 h-4 rotate-90" />}
-                                                    </button>
-                                                </div>
-
-                                                <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-1.5 z-30">
+                                                {/* Dots indicator */}
+                                                <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-3 z-40 bg-black/20 backdrop-blur-md p-2 rounded-full border border-white/5">
                                                     {mediaItems.map((_, i) => (
-                                                        <div
+                                                        <button
                                                             key={i}
-                                                            className={`h-1.5 rounded-full transition-all duration-300 ${activeMediaIndex === i ? 'w-6 bg-white' : 'w-1.5 bg-white/50'}`}
+                                                            onClick={() => setActiveMediaIndex(i)}
+                                                            className={`h-2 rounded-full transition-all duration-300 ${activeMediaIndex === i ? 'w-10 bg-white' : 'w-2 bg-white/40 hover:bg-white/60'}`}
                                                         />
                                                     ))}
                                                 </div>
                                             </>
                                         ) : (
-                                            <div className="text-muted-foreground flex flex-col items-center gap-2">
-                                                <Play className="w-12 h-12 opacity-10" />
-                                                <span>No media to show</span>
+                                            <div className="text-white/20 flex flex-col items-center gap-4">
+                                                <Play className="w-16 h-16 opacity-10" />
+                                                <span className="font-bold tracking-widest uppercase text-xs">Preview Loading...</span>
                                             </div>
                                         )}
                                     </div>
-
-                                    {/* Small Thumbnails Bar */}
-                                    {mediaItems.length > 1 && (
-                                        <div className="p-4 bg-muted/10 border-t flex gap-3 overflow-x-auto no-scrollbar scroll-smooth">
-                                            {mediaItems.map((item, idx) => (
-                                                <button
-                                                    key={idx}
-                                                    onClick={() => setActiveMediaIndex(idx)}
-                                                    className={`relative group flex-shrink-0 w-20 md:w-28 aspect-video rounded-lg overflow-hidden border-2 transition-all ${activeMediaIndex === idx ? 'border-primary ring-4 ring-primary/10 scale-[1.02]' : 'border-transparent opacity-60 hover:opacity-100'}`}
-                                                >
-                                                    {item.type === 'video' ? (
-                                                        <div className="w-full h-full bg-black flex items-center justify-center">
-                                                            <Play className="w-5 h-5 text-white fill-white" />
-                                                        </div>
-                                                    ) : (
-                                                        <img src={item.url} alt="" className="w-full h-full object-cover" />
-                                                    )}
-                                                </button>
-                                            ))}
-                                        </div>
-                                    )}
                                 </div>
 
-                                {/* Content Section (Right/Bottom) */}
-                                <div className="lg:col-span-2 p-6 md:p-8 space-y-8 flex flex-col h-full bg-background/50">
-                                    <div className="space-y-6 flex-1">
-                                        <section className="space-y-3">
-                                            <h3 className="text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground">About the Project</h3>
-                                            <div className="text-base md:text-lg text-foreground/80 leading-relaxed font-normal whitespace-pre-line">
+                                {/* Content Section */}
+                                <div className="lg:col-span-4 p-8 md:p-10 flex flex-col space-y-10">
+                                    <div className="space-y-10 flex-1">
+                                        <section className="space-y-4">
+                                            <h3 className="text-xs font-black uppercase tracking-[0.3em] text-muted-foreground/60 border-b pb-4 border-black/5 dark:border-white/5">Overview</h3>
+                                            <div className="text-lg text-foreground/90 leading-relaxed font-normal whitespace-pre-line">
                                                 {project.description}
                                             </div>
                                         </section>
 
                                         {project.status === 'underway' && project.progress !== undefined && (
-                                            <section className="space-y-3 p-4 rounded-xl bg-blue-50/50 border border-blue-100/50">
-                                                <div className="flex justify-between items-center text-sm">
-                                                    <span className="font-semibold text-blue-700">Project Progress</span>
-                                                    <span className="font-mono text-blue-800">{project.progress}%</span>
+                                            <section className="space-y-4 p-6 rounded-2xl bg-primary/5 border border-primary/10">
+                                                <div className="flex justify-between items-center">
+                                                    <span className="text-sm font-bold uppercase tracking-wider text-primary">Development Progress</span>
+                                                    <span className="font-black text-xl text-primary">{project.progress}%</span>
                                                 </div>
-                                                <div className="h-2 w-full bg-blue-200/50 rounded-full overflow-hidden">
+                                                <div className="h-3 w-full bg-primary/10 rounded-full overflow-hidden">
                                                     <motion.div
                                                         initial={{ width: 0 }}
                                                         animate={{ width: `${project.progress}%` }}
-                                                        className="h-full bg-blue-600 rounded-full shadow-sm"
+                                                        className="h-full bg-primary rounded-full shadow-[0_0_20px_rgba(var(--primary),0.3)]"
                                                     />
                                                 </div>
                                             </section>
                                         )}
 
-                                        <section className="space-y-4">
-                                            <h3 className="text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground">Tech Stack</h3>
-                                            <div className="flex flex-wrap gap-2">
+                                        <section className="space-y-5">
+                                            <h3 className="text-xs font-black uppercase tracking-[0.3em] text-muted-foreground/60 border-b pb-4 border-black/5 dark:border-white/5">Technology</h3>
+                                            <div className="flex flex-wrap gap-2.5">
                                                 {project.tech.map((t) => (
-                                                    <span key={t} className="px-3 py-1.5 bg-background border shadow-sm text-foreground rounded-lg text-sm font-medium hover:border-primary/50 transition-colors">
+                                                    <span key={t} className="px-4 py-2 bg-secondary/80 text-foreground border border-black/5 dark:border-white/5 rounded-xl text-xs font-bold uppercase tracking-wider hover:bg-primary hover:text-primary-foreground hover:border-transparent transition-all cursor-default">
                                                         {t}
                                                     </span>
                                                 ))}
@@ -207,17 +178,17 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
                                         </section>
                                     </div>
 
-                                    {/* Links Footer */}
-                                    <div className="pt-8 border-t flex flex-col sm:flex-row gap-4">
+                                    {/* Action links */}
+                                    <div className="pt-10 border-t border-black/5 dark:border-white/5 flex flex-col gap-4">
                                         {project.link && (
                                             <a
                                                 href={project.link}
                                                 target="_blank"
                                                 rel="noopener noreferrer"
-                                                className="flex-1 inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-primary text-primary-foreground rounded-xl hover:bg-primary/90 hover:scale-[1.02] active:scale-[0.98] transition-all font-bold text-sm shadow-xl shadow-primary/20 group"
+                                                className="group w-full inline-flex items-center justify-center gap-3 px-8 py-5 bg-primary text-primary-foreground rounded-2xl hover:scale-[1.02] active:scale-[0.98] transition-all font-black text-sm uppercase tracking-widest shadow-2xl shadow-primary/20"
                                             >
-                                                Live Experience
-                                                <ExternalLink className="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                                                Visit Project site
+                                                <ExternalLink className="w-5 h-5 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
                                             </a>
                                         )}
                                         {project.github && (
@@ -225,10 +196,10 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
                                                 href={project.github}
                                                 target="_blank"
                                                 rel="noopener noreferrer"
-                                                className="flex-1 inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-secondary text-secondary-foreground border border-black/5 rounded-xl hover:bg-secondary/80 hover:scale-[1.02] active:scale-[0.98] transition-all font-bold text-sm"
+                                                className="w-full inline-flex items-center justify-center gap-3 px-8 py-5 bg-background border-2 border-black/5 dark:border-white/5 text-foreground rounded-2xl hover:bg-muted hover:scale-[1.02] active:scale-[0.98] transition-all font-black text-sm uppercase tracking-widest"
                                             >
-                                                <Github className="w-4 h-4" />
-                                                Source Code
+                                                <Github className="w-5 h-5" />
+                                                View Source
                                             </a>
                                         )}
                                     </div>
