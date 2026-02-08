@@ -1,0 +1,32 @@
+[
+    {
+        "category": "ML & AI",
+        "skills": [
+            "TensorFlow",
+            "PyTorch",
+            "Scikit-learn",
+            "Neural Networks",
+            "Deep Learning"
+        ]
+    },
+    {
+        "category": "Quantitative Finance",
+        "skills": [
+            "Algorithmic Trading",
+            "Risk Analysis",
+            "Portfolio Optimization",
+            "Time Series Analysis"
+        ]
+    },
+    {
+        "category": "Data & Tools",
+        "skills": [
+            "Python",
+            "SQL",
+            "Pandas",
+            "NumPy",
+            "AWS",
+            "Docker"
+        ]
+    }
+]

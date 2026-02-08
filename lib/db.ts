@@ -55,6 +55,17 @@ export const db = {
     },
 
     getProfile: async (): Promise<Profile> => {
+        try {
+            const res = await fetch('/api/profile');
+            if (res.ok) {
+                const data = await res.json();
+                if (data) return data;
+            }
+        } catch (error) {
+            console.error("Failed to fetch profile:", error);
+        }
+
+        // Fallback to localStorage for compatibility or MOCK if not available
         if (typeof window !== 'undefined') {
             const stored = localStorage.getItem('portfolio-profile');
             if (stored) return JSON.parse(stored);
@@ -63,6 +74,16 @@ export const db = {
     },
 
     getSkills: async (): Promise<SkillGroup[]> => {
+        try {
+            const res = await fetch('/api/skills');
+            if (res.ok) {
+                const data = await res.json();
+                if (data && data.length > 0) return data;
+            }
+        } catch (error) {
+            console.error("Failed to fetch skills:", error);
+        }
+
         if (typeof window !== 'undefined') {
             const stored = localStorage.getItem('portfolio-skills');
             if (stored) return JSON.parse(stored);
@@ -135,14 +156,52 @@ export const db = {
     },
 
     updateProfile: async (profile: Profile) => {
-        if (typeof window !== 'undefined') {
-            localStorage.setItem('portfolio-profile', JSON.stringify(profile));
+        try {
+            const res = await fetch('/api/profile', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(profile)
+            });
+            const data = await res.json();
+            if (!res.ok) throw new Error(data.error || 'Failed to update profile');
+
+            if (typeof window !== 'undefined') {
+                localStorage.setItem('portfolio-profile', JSON.stringify(profile));
+            }
+
+            if (data.githubError || !data.githubSynced) {
+                const errorMsg = data.githubError || 'GitHub sync failed - profile will not persist on Vercel';
+                throw new Error(`Failed to save profile: ${errorMsg}. Please check your GITHUB_TOKEN.`);
+            }
+            return data;
+        } catch (error: any) {
+            console.error("Failed to update profile:", error);
+            throw error;
         }
     },
 
     updateSkills: async (skills: SkillGroup[]) => {
-        if (typeof window !== 'undefined') {
-            localStorage.setItem('portfolio-skills', JSON.stringify(skills));
+        try {
+            const res = await fetch('/api/skills', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(skills)
+            });
+            const data = await res.json();
+            if (!res.ok) throw new Error(data.error || 'Failed to update skills');
+
+            if (typeof window !== 'undefined') {
+                localStorage.setItem('portfolio-skills', JSON.stringify(skills));
+            }
+
+            if (data.githubError || !data.githubSynced) {
+                const errorMsg = data.githubError || 'GitHub sync failed - skills will not persist on Vercel';
+                throw new Error(`Failed to save skills: ${errorMsg}. Please check your GITHUB_TOKEN.`);
+            }
+            return data;
+        } catch (error: any) {
+            console.error("Failed to update skills:", error);
+            throw error;
         }
     },
 
