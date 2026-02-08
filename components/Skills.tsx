@@ -1,12 +1,23 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { SkillGroup } from "@/types";
-import { useEffect, useState } from "react";
 import { db } from "@/lib/db";
+import { Code, Database, Terminal, Cpu, Layout, Globe } from "lucide-react";
+import { motion } from "framer-motion";
 
 interface SkillsProps {
     skills: SkillGroup[];
 }
+
+const CATEGORY_ICONS: Record<string, any> = {
+    "ML & AI": Cpu,
+    "Quantitative Finance": Terminal,
+    "Data & Tools": Database,
+    "Frontend": Layout,
+    "Backend": Code,
+    "Tools": Globe
+};
 
 export function Skills({ skills: initialSkills }: SkillsProps) {
     const [skills, setSkills] = useState<SkillGroup[]>(initialSkills);
@@ -14,31 +25,58 @@ export function Skills({ skills: initialSkills }: SkillsProps) {
     useEffect(() => {
         const loadSkills = async () => {
             const data = await db.getSkills();
-            setSkills(data);
+            if (data && data.length > 0) {
+                setSkills(data);
+            }
         };
         loadSkills();
     }, []);
-    return (
-        <section id="skills" className="py-20 border-t bg-secondary/30">
-            <div className="container px-4 md:px-6 mx-auto max-w-5xl">
-                <h2 className="text-3xl font-bold tracking-tight mb-12">Skills</h2>
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
-                    {skills.map((group) => (
-                        <div key={group.category} className="space-y-6">
-                            <h3 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
-                                {group.category}
-                            </h3>
-                            <ul className="space-y-3">
-                                {group.skills.map((skill) => (
-                                    <li key={skill} className="flex items-center gap-2 text-base font-medium">
-                                        <span className="w-1.5 h-1.5 rounded-full bg-primary" />
-                                        {skill}
-                                    </li>
-                                ))}
-                            </ul>
-                        </div>
-                    ))}
+    return (
+        <section id="skills" className="py-24 md:py-32 bg-secondary/20 relative overflow-hidden">
+            <div className="container px-4 md:px-6 mx-auto max-w-6xl relative z-10">
+                <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
+                    <div className="space-y-4">
+                        <h2 className="text-3xl md:text-5xl font-bold tracking-tight">Technical Arsenal</h2>
+                        <p className="text-muted-foreground text-lg max-w-2xl">
+                            A curated selection of technologies I've mastered to build high-performance, scalable solutions.
+                        </p>
+                    </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    {skills.map((group, groupIdx) => {
+                        const Icon = CATEGORY_ICONS[group.category] || Code;
+                        return (
+                            <motion.div
+                                key={group.category}
+                                initial={{ opacity: 0, y: 20 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                viewport={{ once: true }}
+                                transition={{ delay: groupIdx * 0.1 }}
+                                className="group p-8 bg-card border border-black/5 dark:border-white/5 rounded-3xl shadow-sm hover:shadow-xl transition-all duration-500 hover:-translate-y-2 flex flex-col"
+                            >
+                                <div className="flex items-center gap-4 mb-8">
+                                    <div className="p-3 bg-primary/5 rounded-2xl group-hover:bg-primary group-hover:text-primary-foreground transition-colors duration-500 shadow-inner">
+                                        <Icon className="w-6 h-6" />
+                                    </div>
+                                    <h3 className="text-xl font-bold tracking-tight">
+                                        {group.category}
+                                    </h3>
+                                </div>
+                                <div className="flex flex-wrap gap-2 mt-auto">
+                                    {group.skills.map((skill) => (
+                                        <span
+                                            key={skill}
+                                            className="px-4 py-2 bg-secondary/50 hover:bg-primary hover:text-primary-foreground text-foreground border border-black/[0.03] dark:border-white/[0.03] rounded-xl text-sm font-medium transition-all duration-300 transform"
+                                        >
+                                            {skill}
+                                        </span>
+                                    ))}
+                                </div>
+                            </motion.div>
+                        );
+                    })}
                 </div>
             </div>
         </section>
